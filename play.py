@@ -49,7 +49,8 @@ class PyGymCallback(Callback):
         self.human = human
 
     def before_play(self):
-        rendered = self.env.render(mode='rgb_array')
+        rendered = self.env.render()
+        # rendered = self.env.render(mode='rgb_array')
         self.video_size = [rendered.shape[1], rendered.shape[0]]
         
         if self.zoom is not None:
@@ -73,7 +74,7 @@ class PyGymCallback(Callback):
         self.play.action = self.env.action_space.sample()
     
     def step(self):
-        self.play.next_state, self.play.reward, self.play.term, self.play.info = self.env.step(self.action)
+        self.play.next_state, self.play.reward, self.play.term, _, self.play.info = self.env.step(self.action)
 
     def after_step(self):
         # TODO: This might be an issue later on but for now we only pop the events 
@@ -100,7 +101,8 @@ class PyGymCallback(Callback):
     
     def render(self):
         if self.next_state is not None and self.human:
-            rendered = self.env.render(mode='rgb_array')
+            rendered = self.env.render()
+            # rendered = self.env.render(mode='rgb_array')
             self._update_screen(self.screen, rendered)
             caption = f"{round(self.clock.get_fps())} {self.episode}"
             pygame.display.set_caption(caption)
